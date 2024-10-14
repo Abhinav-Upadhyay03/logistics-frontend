@@ -7,6 +7,7 @@ import App from '../../../App'
 import SignUp from '../../pages/signUp-page'
 import UserPage from '../../pages/user-page'
 import DriverPage from '../../pages/driver-page'
+import AllVehicles from '../../pages/all-vehicles-page'
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,11 @@ const router = createBrowserRouter([
     {
         path: Routes.Driver,
         element: <DriverPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: Routes.AllVehicles,
+        element: <AllVehicles />,
         errorElement: <ErrorPage />,
     }
 ])

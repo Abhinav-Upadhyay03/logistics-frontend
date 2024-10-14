@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const SignInViewModel = () => {
@@ -9,7 +10,7 @@ const SignInViewModel = () => {
     const [errorText,setErrorText] = useState('');
     const [isPasswordVisible,setIsPasswordVisible] = useState(false);
     const initialUserLoginFormData = {
-  user: '',
+  email: '',
   password: ''
 }
 
@@ -28,13 +29,34 @@ const handleInputChange = (field, value) => {
   })
 }
 
-const handleUserLogin = (e) => {
+const handleUserLogin = async (e) => {
   e.preventDefault();
+  try {
+    // Make a POST request to login the user
+    // console.log(`Form data: ${userLoginFormData}`);
+    const response = await axios.post('/api/login', userLoginFormData);
 
-  setIsLoading(true);
-  console.log(userLoginFormData);
-  
-}
+    // Check if the response contains the user data
+    if (response.data) {
+      console.log('Login successful:', response.data);
+
+      // Get the user's role
+      const userRole = response.data.user.role;
+
+      // Navigate based on the user's role
+      if (userRole === 'user') {
+        navigate('/user');
+      } else if (userRole === 'driver') {
+        navigate('/driver');
+      } else {
+        console.error('Unknown role:', userRole);
+      }
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    alert('Invalid email or password');
+  }
+};
 
 
   return  {

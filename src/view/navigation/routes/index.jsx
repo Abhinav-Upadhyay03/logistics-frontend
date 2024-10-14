@@ -4,5 +4,6 @@ export const Routes = {
     SignUp: '/signup',
     User: '/user',
     Driver: '/driver',
+    AllVehicles: '/allVehicles',
 
 }
