@@ -5,6 +5,8 @@ import ErrorPage from '../../components/common/error-page'
 import { Routes } from '../routes'
 import App from '../../../App'
 import SignUp from '../../pages/signUp-page'
+import UserPage from '../../pages/user-page'
+import DriverPage from '../../pages/driver-page'
 
 const router = createBrowserRouter([
     {
@@ -22,6 +24,16 @@ const router = createBrowserRouter([
         element: <SignUp />,
         errorElement: <ErrorPage />,
     },
+    {
+        path: Routes.User,
+        element: <UserPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: Routes.Driver,
+        element: <DriverPage />,
+        errorElement: <ErrorPage />,
+    }
 ])
 
 export default router

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
@@ -19,12 +20,12 @@ const SignUpViewModel = () => {
       setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
   const intialRegistrationFormData = {
-    userName: '',
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: '',
+    vehicleType: '',
   }
   const [registrationFormData,setRegistrationFormData] = useState(intialRegistrationFormData)
   const handleFormInputChange = (field,value) => {
@@ -35,9 +36,21 @@ const SignUpViewModel = () => {
   }
   const registerSubmit = async (e) => {
       e.preventDefault();
-      setIsLoading(true);
+      // setIsLoading(true);
+      console.log(registrationFormData);
+      const data = await axios.post('/api/signup',registrationFormData);
+      {console.log(data)};
+      
+      
       console.log("Registered Successfully");
+      if(data.data.user.role === 'user'){
+          navigate('/user');
+      }else{
+          navigate('/driver');
+      }
   }
+  
+  
 
   return{
     isLoading: isLoading,
