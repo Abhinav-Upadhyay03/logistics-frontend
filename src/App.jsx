@@ -1,5 +1,5 @@
 import axios from 'axios';
-import './App.css';
+
 import { useState, useEffect } from 'react'; 
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
       setNames(response.data);
     })
     .catch((error) => {
-      console.log({ error });
+      console.log(`Error: ${ error }`);
     });
   }, []);
 

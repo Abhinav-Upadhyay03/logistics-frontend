@@ -1,0 +1,15 @@
+/* .loginInput {
+    @apply w-[428px] h-10 bg-[#white] mb-3.5 rounded-md px-[1vw] focus:outline-none border-[1px];
+    @apply w-[300px] sm:w-[300px] md:w-[350px] lg:w-[428px];
+} */
+
+*{
+    cursor: default
+}
+
+.loginInputEmail{
+    @apply  w-full h-10 bg-white mb-3.5 sm:rounded-md sm:border border-b  focus:outline-none px-[1vw]
+}
+.loginInputPassword{
+    @apply  sm:w-full w-[60%] h-10 bg-white sm:mb-3.5 sm:rounded-md sm:border sm:border-b  focus:outline-none px-[1vw]
+}
