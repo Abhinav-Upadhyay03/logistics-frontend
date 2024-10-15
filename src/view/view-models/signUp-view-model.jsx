@@ -21,12 +21,12 @@ const SignUpViewModel = () => {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
   const intialRegistrationFormData = {
-    fullName: "driver1",
-    email: "driver@gmail.com",
-    password: "111111",
-    confirmPassword: "111111",
-    role: "driver",
-    vehicleType: "medium sized",
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
+    vehicleType: "",
   };
   const [registrationFormData, setRegistrationFormData] = useState(
     intialRegistrationFormData

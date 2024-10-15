@@ -31,12 +31,7 @@ const SignUp = () => {
       {isLoading && <FullScreenLoader />}
       <div className="sm:block hidden bg-[#28a99e] w-[40%] h-svh"></div>
       <div className="bg-white sm:w-[60%] w-full h-svh">
-        <div className="w-full sm:h-[15%] h-[10%] sm:bg-white bg-[#28a99e]">
-          <div className="w-full h-[35%]"></div>
-          <div className="flex justify-center w-full h-[50%]">
-            <img className=" " src={LogoMain} alt="link" />
-          </div>
-        </div>
+
         <form className="sm:mt-8" action="" onSubmit={registerSubmit}>
           <div className="sm:p-0 p-6 sm:px-20 pt-10">
             <h1 className="text-center sm:text-left text-4xl font-normal">
