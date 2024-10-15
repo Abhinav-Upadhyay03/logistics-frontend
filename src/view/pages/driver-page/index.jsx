@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import JobCard from '../../components/driver/Card';
 import axios from 'axios';
+import { set } from 'mongoose';
 
 const DriverPage = () => {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [availableJobs, setAvailableJobs] = useState([]);
   const [ongoingJobs, setOngoingJobs] = useState([]);
-  const [flag, setFlag] = useState(0)
+  const [flag, setFlag] = useState(0);
+  const [user, setUser] = useState({}); 
 
   useEffect(() => {
     // Fetch the user from localStorage
     const user = JSON.parse(localStorage.getItem('user'));
+    // console.log(user);
+    
     if (user) {
       setName(user.fullName);
       setId(user._id);
+      setUser(user);
     }
 
     // Fetch available jobs for the driver
@@ -36,11 +41,26 @@ const DriverPage = () => {
     const acceptedJob = availableJobs.find((job) => job._id === jobID);
     setOngoingJobs([...ongoingJobs, { ...acceptedJob, status: 'On the way' }]);
     setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
+    // set the availability field of the vehicle to false from the vehicle id present in the driver collection
+    axios.put(`/api/vehicles?vehicleId=${user.vehicle}`, { availability: false })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error updating vehicle availability:', error);
+      });
   };
 
   // Handle job decline
   const handleDeclineJob = (jobID) => {
     setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
+    axios.put(`/api/booking?bookingId=${jobID}`, { status: 'Cancelled' })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error updating job status:', error);
+    });
   };
 
   // Handle status change
@@ -49,10 +69,18 @@ const DriverPage = () => {
       job._id === jobID ? { ...job, status: newStatus } : job
     );
     setOngoingJobs(updatedJobs);
-
+    console.log(newStatus);
+    
     if (newStatus === 'Delivered') {
       setOngoingJobs(ongoingJobs.filter((job) => job._id !== jobID));
     }
+    axios.put(`/api/booking?bookingId=${jobID}`, { status: newStatus })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error updating job status:', error);
+    } );
   };
 
   const [latitude, setLatitude] = useState('');
