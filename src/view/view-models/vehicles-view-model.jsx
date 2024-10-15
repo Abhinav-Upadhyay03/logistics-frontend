@@ -23,7 +23,7 @@ const VehiclesViewModel = () => {
 
   // Log the vehicles whenever they change
   useEffect(() => {
-    console.log(vehicles);
+    // console.log(vehicles);
   }, [vehicles]);
 
   return { vehicles, isLoading, error }; 

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+import axios from 'axios';  
+import { useNavigate } from 'react-router-dom';
 
-const VehicleCard = ({ id, vehicleSize, name, distance }) => {
+
+const VehicleCard = ({ id, vehicleSize, name, distance, pickupLocation, dropOffLocation, userId, driverId }) => {
+  const navigate = useNavigate(); 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(vehicleSize);
-  console.log(distance);
-  
-  
+
   const handleCardClick = () => {
     setIsModalOpen(true);
   };
@@ -15,26 +16,63 @@ const VehicleCard = ({ id, vehicleSize, name, distance }) => {
     setIsModalOpen(false);
   };
 
-  const handleConfirmModal = () => {
-    setIsModalOpen(false);
-    alert('Booking confirmed!');
+  const handleConfirmModal = async () => {
+    try {
+      // Calculate the trip price
+      const price = calculateTripPrice(distance, vehicleSize);
+
+      // Prepare booking data
+      const bookingData = {
+        userId,           
+        driverId,         
+        pickupLocation,   
+        dropOffLocation,  
+        vehicleType: vehicleSize,      
+        price,            
+      };
+      // Send POST request to the backend
+      const response = await axios.post('/api/booking', bookingData);
+      console.log(response.data);
+      
+      if (response.data.success) {
+        alert('Booking confirmed!');
+
+        navigate('/userBooking', {
+        state: {
+          vehicleType: vehicleSize,
+          driverName: name,       
+          price,
+          distance,
+          status: response.data.bookingStatus || 'On the way to pickup', 
+          pickupLocation, 
+          dropOffLocation
+        }
+      });
+      } else {
+        alert('Error confirming the booking. Please try again.');
+      }
+
+    } catch (error) {
+      console.error('Error confirming booking:', error);
+      alert('Server error. Please try again later.');
+    } finally {
+      setIsModalOpen(false);
+    }
+
   };
 
   const calculateTripPrice = (distance, vehicleSize) => {
-    // Define base rates per kilometer for each vehicle size
     const rates = {
       'small sized': 1.5,
       'medium sized': 2.0,
       'large sized': 2.5,
     };
     const ratePerKm = rates[vehicleSize];
-    // Check if the vehicle size is valid
     if (ratePerKm === undefined) {
       throw new Error('Invalid vehicle size');
     }
-    
+
     let totalPrice = distance * ratePerKm;
-    // Add booking fee
     const bookingFee = 5.0;
     totalPrice += bookingFee;
 
@@ -56,7 +94,7 @@ const VehicleCard = ({ id, vehicleSize, name, distance }) => {
         <Modal
           vehicleSize={vehicleSize}
           driverName={name}
-          distance={distance} // Pass distance to modal
+          distance={distance}
           calculateTripPrice={calculateTripPrice}
           onConfirm={handleConfirmModal}
           onClose={handleCloseModal}
