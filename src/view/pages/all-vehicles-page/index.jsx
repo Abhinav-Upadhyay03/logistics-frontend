@@ -10,7 +10,6 @@ const AllVehicles = () => {
 
   if (isLoading) return <p>Loading vehicles...</p>;
   if (error) return <p>Error fetching vehicles: {error}</p>;
-  // console.log(vehicles);
 
   return (
     <div className="p-5 w-full h-screen">
@@ -18,7 +17,6 @@ const AllVehicles = () => {
         Select a vehicle
       </h1>
 
-      {/* Pickup, Drop-off, and Distance Section */}
       {pickup && dropOff && distance && (
         <>
           <div className="flex justify-between px-20">
@@ -44,7 +42,6 @@ const AllVehicles = () => {
         </>
       )}
 
-      {/* Vehicle Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-10">
         {vehicles.map((vehicle, index) => (
           <VehicleCard

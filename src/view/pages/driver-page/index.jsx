@@ -7,6 +7,7 @@ const DriverPage = () => {
   const [id, setId] = useState('');
   const [availableJobs, setAvailableJobs] = useState([]);
   const [ongoingJobs, setOngoingJobs] = useState([]);
+  const [flag, setFlag] = useState(0)
 
   useEffect(() => {
     // Fetch the user from localStorage
@@ -21,7 +22,7 @@ const DriverPage = () => {
       try {
         const response = await axios.get(`/api/bookings?driverId=${user._id}`);
         setAvailableJobs(response.data.bookings); 
-        console.log(response.data.bookings);
+        // console.log(response.data.bookings);
       } catch (error) {
         console.error('Error fetching jobs:', error);
       }
@@ -54,9 +55,45 @@ const DriverPage = () => {
     }
   };
 
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+    alert("Location updated successfully");
+  }
+
+  const showPosition = (position) => {
+    setLatitude(position.coords.latitude);
+    setLongitude(position.coords.longitude);
+    setFlag(flag+1)
+    console.log("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
+  }
+  
+  useEffect(() => {
+  if (id && flag>0) {
+    axios.put(`/api/driver?driverId=${id}`, { latitude, longitude })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error updating location:', error);
+      });
+  }
+}, [id, flag]); 
+  
+
   return (
     <div className='m-14'>
+    <div className='flex justify-between'>
       <p className='text-3xl'>Hello {name},</p>
+      <button onClick={getLocation} className='bg-blue-500 text-white px-5 rounded-xl font-medium'>Update My Location</button>
+    </div>
+      
       <div className='flex h-screen'>
         {/* Ongoing Jobs Section */}
         <div className='text-xl px-10 pt-5 w-1/2'>

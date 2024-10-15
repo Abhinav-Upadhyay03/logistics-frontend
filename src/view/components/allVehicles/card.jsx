@@ -45,7 +45,8 @@ const VehicleCard = ({ id, vehicleSize, name, distance, pickupLocation, dropOffL
           distance,
           status: response.data.bookingStatus || 'On the way to pickup', 
           pickupLocation, 
-          dropOffLocation
+          dropOffLocation,
+          driverId,
         }
       });
       } else {
