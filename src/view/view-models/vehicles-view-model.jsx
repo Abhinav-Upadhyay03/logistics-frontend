@@ -8,7 +8,9 @@ const VehiclesViewModel = () => {
 
   const getAllVehicles = async () => {
     try {
-      const response = await axios.get('/api/vehicles');  
+      const response = await axios.get('/api/drivers');
+      console.log(response.data);
+        
       setVehicles(response.data);
     } catch (err) {
       setError(err.message); 

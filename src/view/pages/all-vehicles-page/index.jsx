@@ -43,16 +43,16 @@ const AllVehicles = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-10">
-        {vehicles.map((vehicle, index) => (
+        {vehicles.drivers.map((vehicle, index) => (
           <VehicleCard
             key={index}
             id={index}
             vehicleSize={vehicle.vehicleType}
-            name={vehicle.driver?.fullName || "Unknown Driver"}
+            name={vehicle.fullName || "Unknown Driver"}
             distance={distance}
             pickupLocation={pickup}
             dropOffLocation={dropOff}
-            driverId={vehicle.driver?._id}
+            driverId={vehicle._id}
             userId={"670d5efa798258a2e1f3d82c"}
           />
         ))}

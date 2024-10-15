@@ -1,127 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import JobCard from '../../components/driver/Card';
-import axios from 'axios';
-import { set } from 'mongoose';
+import DriverViewModel from '../../view-models/driver-view-model.jsx';
 
 const DriverPage = () => {
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
-  const [availableJobs, setAvailableJobs] = useState([]);
-  const [ongoingJobs, setOngoingJobs] = useState([]);
-  const [flag, setFlag] = useState(0);
-  const [user, setUser] = useState({}); 
-
-  useEffect(() => {
-    // Fetch the user from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
-    // console.log(user);
-    
-    if (user) {
-      setName(user.fullName);
-      setId(user._id);
-      setUser(user);
-    }
-
-    // Fetch available jobs for the driver
-    const fetchJobs = async () => {
-      try {
-        const response = await axios.get(`/api/bookings?driverId=${user._id}`);
-        setAvailableJobs(response.data.bookings); 
-        // console.log(response.data.bookings);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-      }
-    };
-
-    fetchJobs();
-  }, []); 
-
-  // Handle job acceptance
-  const handleAcceptJob = (jobID) => {
-    const acceptedJob = availableJobs.find((job) => job._id === jobID);
-    setOngoingJobs([...ongoingJobs, { ...acceptedJob, status: 'On the way' }]);
-    setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
-    // set the availability field of the vehicle to false from the vehicle id present in the driver collection
-    axios.put(`/api/vehicles?vehicleId=${user.vehicle}`, { availability: false })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Error updating vehicle availability:', error);
-      });
-  };
-
-  // Handle job decline
-  const handleDeclineJob = (jobID) => {
-    setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
-    axios.put(`/api/booking?bookingId=${jobID}`, { status: 'Cancelled' })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error('Error updating job status:', error);
-    });
-  };
-
-  // Handle status change
-  const handleStatusChange = (jobID, newStatus) => {
-    const updatedJobs = ongoingJobs.map((job) =>
-      job._id === jobID ? { ...job, status: newStatus } : job
-    );
-    setOngoingJobs(updatedJobs);
-    console.log(newStatus);
-    
-    if (newStatus === 'Delivered') {
-      setOngoingJobs(ongoingJobs.filter((job) => job._id !== jobID));
-    }
-    axios.put(`/api/booking?bookingId=${jobID}`, { status: newStatus })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error('Error updating job status:', error);
-    } );
-  };
-
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-    alert("Location updated successfully");
-  }
-
-  const showPosition = (position) => {
-    setLatitude(position.coords.latitude);
-    setLongitude(position.coords.longitude);
-    setFlag(flag+1)
-    console.log("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
-  }
-  
-  useEffect(() => {
-  if (id && flag>0) {
-    axios.put(`/api/driver?driverId=${id}`, { latitude, longitude })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Error updating location:', error);
-      });
-  }
-}, [id, flag]); 
-  
+  const {
+    name,
+    ongoingJobs,
+    availableJobs,
+    handleAcceptJob,
+    handleDeclineJob,
+    handleStatusChange,
+    getLocation
+  } = DriverViewModel(); 
 
   return (
     <div className='m-14'>
-    <div className='flex justify-between'>
-      <p className='text-3xl'>Hello {name},</p>
-      <button onClick={getLocation} className='bg-blue-500 text-white px-5 rounded-xl font-medium'>Update My Location</button>
-    </div>
-      
+      <div className='flex justify-between'>
+        <p className='text-3xl'>Hello {name},</p>
+        <button
+          onClick={getLocation}
+          className='bg-blue-500 text-white px-5 rounded-xl font-medium'>
+          Update My Location
+        </button>
+      </div>
+
       <div className='flex h-screen'>
         {/* Ongoing Jobs Section */}
         <div className='text-xl px-10 pt-5 w-1/2'>
@@ -131,12 +33,14 @@ const DriverPage = () => {
           ) : (
             ongoingJobs.map((job) => (
               <JobCard
-                key={job._id} // Use _id as the key
-                jobID={job._id} // Pass _id as jobID
+                key={job._id} 
+                jobID={job._id} 
                 pickupLocation={job.pickupLocation}
                 dropOffLocation={job.dropOffLocation}
                 status={job.status}
-                onUpdateStatus={(newStatus) => handleStatusChange(job._id, newStatus)}
+                onUpdateStatus={(newStatus) =>
+                  handleStatusChange(job._id, newStatus)
+                }
               />
             ))
           )}
@@ -150,8 +54,8 @@ const DriverPage = () => {
           ) : (
             availableJobs.map((job) => (
               <JobCard
-                key={job._id} // Use _id as the key
-                jobID={job._id} // Pass _id as jobID
+                key={job._id} 
+                jobID={job._id} 
                 pickupLocation={job.pickupLocation}
                 dropOffLocation={job.dropOffLocation}
                 onAccept={() => handleAcceptJob(job._id)}
