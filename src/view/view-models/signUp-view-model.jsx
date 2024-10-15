@@ -48,11 +48,16 @@ const SignUpViewModel = () => {
       const response = await axios.post(url, registrationFormData);
 
       if (response.data.success) {
+        
         alert("Registration successful!");
-        if (response.data.driver.role === "user") {
+        if (response.data.user && response.data.user.role === "user") {
           navigate("/user");
-        } else {
+        } else if (response.data && response.data.driver.fullName) {
           navigate("/driver");
+        } else if (response.data.user.role === "admin") {
+          navigate("/admin");
+        } else {
+          alert("Invalid role detected: " + response.data.user.role);
         }
       } else {
         alert("Registration failed: " + response.data.message);

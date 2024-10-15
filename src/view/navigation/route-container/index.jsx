@@ -9,6 +9,7 @@ import UserPage from '../../pages/user-page'
 import DriverPage from '../../pages/driver-page'
 import AllVehicles from '../../pages/all-vehicles-page'
 import UserBooking from '../../pages/user-booking'
+import AdminPage from '../../pages/admin-page'
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,11 @@ const router = createBrowserRouter([
     {
         path: Routes.UserBooking,
         element: <UserBooking />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: Routes.Admin,
+        element: <AdminPage />,
         errorElement: <ErrorPage />,
     }
 ])

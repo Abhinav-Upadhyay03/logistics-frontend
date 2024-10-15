@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -65,10 +65,15 @@ const UserPage = () => {
       });
     }
   };
+  const [name, setName] = useState('');
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    setName(user.fullName);
+  },[])
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen bg-[#28a99e] text-white">
-      <p className="text-3xl mb-5">Hello User</p>
+      <p className="text-3xl mb-5">Hello {name}</p>
 
       {/* Pickup Location */}
       <div className="w-1/2 mb-4">

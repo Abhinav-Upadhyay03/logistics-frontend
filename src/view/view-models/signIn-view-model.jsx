@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -17,6 +17,11 @@ const SignInViewModel = () => {
 const handlePasswordEyeClick = () => {
   setIsPasswordVisible(prev => !prev)
 }
+const [user, setUser] = useState({});
+useEffect(() => {
+  localStorage.setItem('user', JSON.stringify(user));
+}, [user]);
+
 
 const [userLoginFormData, setUserLoginFormData] = useState(initialUserLoginFormData)
 
@@ -32,24 +37,33 @@ const handleInputChange = (field, value) => {
 const handleUserLogin = async (e) => {
   e.preventDefault();
   try {
-    // Make a POST request to login the user
-    // console.log(`Form data: ${userLoginFormData}`);
     const response = await axios.post('/api/login', userLoginFormData);
-
-    // Check if the response contains the user data
     if (response.data) {
       console.log('Login successful:', response.data);
+      
 
-      // Get the user's role
-      const userRole = response.data.user.role;
+      if (response.data.success) {
+        console.log(response.data);
+        
+        alert("Login successful!");
 
-      // Navigate based on the user's role
-      if (userRole === 'user') {
-        navigate('/user');
-      } else if (userRole === 'driver') {
-        navigate('/driver');
+        if (response.data.user && response.data.user.role === "user") {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user to localStorage
+          navigate("/user");
+        } else if (response.data.user && response.data.user.vehicle) {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user)); // Save driver to localStorage
+          navigate("/driver");
+        } else if (response.data.user.role === "admin") {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user)); // Save admin to localStorage
+          navigate("/admin");
+        } else {
+          alert("Invalid role detected: " + response.data.user.role);
+        }
       } else {
-        console.error('Unknown role:', userRole);
+        alert("Login failed: " + response.data.message);
       }
     }
   } catch (error) {
@@ -57,6 +71,8 @@ const handleUserLogin = async (e) => {
     alert('Invalid email or password');
   }
 };
+
+
 
 
   return  {

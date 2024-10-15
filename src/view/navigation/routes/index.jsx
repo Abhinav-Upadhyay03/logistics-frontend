@@ -8,5 +8,6 @@ export const Routes = {
     Driver: '/driver',
     AllVehicles: '/allVehicles',
     UserBooking: '/userBooking',
+    Admin: '/admin',
 
 }
