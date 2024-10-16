@@ -9,7 +9,7 @@ const IncomeChart = ({ netIncome, incomeFromOngoingTrips, avgIncomePerTrip }) =>
   ];
 
   return (
-    <div className="h-[43%] w-full text-center bg-[#FEF9F2]">
+    <div className="h-[43%] w-full text-center ">
       <p className="text-center text-2xl pt-4 font-base">Income Overview</p>
 
       <ResponsiveContainer width="100%" height={300}>

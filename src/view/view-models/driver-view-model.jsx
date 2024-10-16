@@ -1,70 +1,84 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const DriverViewModel = () => {
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
   const [availableJobs, setAvailableJobs] = useState([]);
   const [ongoingJobs, setOngoingJobs] = useState([]);
   const [flag, setFlag] = useState(0);
   const [user, setUser] = useState({});
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
   useEffect(() => {
     // Fetch the user from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
       setName(user.fullName);
       setId(user._id);
       setUser(user);
     }
-
-    // Fetch available jobs for the driver
     const fetchJobs = async () => {
       try {
         const response = await axios.get(`/api/bookings?driverId=${user._id}`);
-        setAvailableJobs(response.data.bookings);
+        const allJobs = response.data.bookings;
+
+        const pendingJobs = allJobs.filter((job) => job.status === "Pending");
+        const ongoingJobs = allJobs.filter(
+          (job) =>
+            job.status === "On the way to pickup" ||
+            job.status === "Goods Collected"
+        );
+        setAvailableJobs(pendingJobs);
+        setOngoingJobs(ongoingJobs);
       } catch (error) {
-        console.error('Error fetching jobs:', error);
+        console.error("Error fetching jobs:", error);
       }
     };
-
     fetchJobs();
   }, []);
 
   // Handle job acceptance
   const handleAcceptJob = (jobID) => {
     const acceptedJob = availableJobs.find((job) => job._id === jobID);
-    setOngoingJobs([...ongoingJobs, { ...acceptedJob, status: 'On the way to pickup' }]);
+    setOngoingJobs([
+      ...ongoingJobs,
+      { ...acceptedJob, status: "On the way to pickup" },
+    ]);
     setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
 
-    axios.put(`/api/drivers?driverId=${id}`, { available: false })
+    axios
+      .put(`/api/drivers?driverId=${id}`, { available: false })
       .then((response) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error('Error updating vehicle availability:', error);
+        console.error("Error updating vehicle availability:", error);
       });
-      axios.put(`/api/booking?bookingId=${jobID}`, { status: "On the way to pickup" })
+    axios
+      .put(`/api/booking?bookingId=${jobID}`, {
+        status: "On the way to pickup",
+      })
       .then((response) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error('Error updating job status:', error);
+        console.error("Error updating job status:", error);
       });
   };
 
   // Handle job decline
   const handleDeclineJob = (jobID) => {
     setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
-    axios.put(`/api/booking?bookingId=${jobID}`, { status: 'Cancelled' })
+    axios
+      .put(`/api/booking?bookingId=${jobID}`, { status: "Cancelled" })
       .then((response) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error('Error updating job status:', error);
+        console.error("Error updating job status:", error);
       });
   };
 
@@ -75,23 +89,25 @@ const DriverViewModel = () => {
     );
     setOngoingJobs(updatedJobs);
 
-    if (newStatus === 'Delivered') {
+    if (newStatus === "Delivered") {
       setOngoingJobs(ongoingJobs.filter((job) => job._id !== jobID));
-      axios.put(`/api/drivers?driverId=${id}`, { available: true })
+      axios
+        .put(`/api/drivers?driverId=${id}`, { available: true })
         .then((response) => {
           console.log(response.data);
         })
         .catch((error) => {
-          console.error('Error updating vehicle availability:', error);
+          console.error("Error updating vehicle availability:", error);
         });
     }
 
-    axios.put(`/api/booking?bookingId=${jobID}`, { status: newStatus })
+    axios
+      .put(`/api/booking?bookingId=${jobID}`, { status: newStatus })
       .then((response) => {
         console.log(response.data);
       })
       .catch((error) => {
-        console.error('Error updating job status:', error);
+        console.error("Error updating job status:", error);
       });
   };
 
@@ -100,9 +116,9 @@ const DriverViewModel = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-      alert('Geolocation is not supported by this browser.');
+      alert("Geolocation is not supported by this browser.");
     }
-    alert('Location updated successfully');
+    alert("Location updated successfully");
   };
 
   const showPosition = (position) => {
@@ -110,18 +126,22 @@ const DriverViewModel = () => {
     setLongitude(position.coords.longitude);
     setFlag(flag + 1);
     console.log(
-      'Latitude: ' + position.coords.latitude + ' Longitude: ' + position.coords.longitude
+      "Latitude: " +
+        position.coords.latitude +
+        " Longitude: " +
+        position.coords.longitude
     );
   };
 
   useEffect(() => {
     if (id && flag > 0) {
-      axios.put(`/api/driver?driverId=${id}`, { latitude, longitude })
+      axios
+        .put(`/api/driver?driverId=${id}`, { latitude, longitude })
         .then((response) => {
           console.log(response.data);
         })
         .catch((error) => {
-          console.error('Error updating location:', error);
+          console.error("Error updating location:", error);
         });
     }
   }, [id, flag]);
@@ -134,7 +154,7 @@ const DriverViewModel = () => {
     handleAcceptJob,
     handleDeclineJob,
     handleStatusChange,
-    getLocation
+    getLocation,
   };
 };
 

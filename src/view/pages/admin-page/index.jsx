@@ -51,8 +51,8 @@ const AdminPage = () => {
       <p className="text-center text-4xl mt-7 font-semibold">
         Admin Dashboard
       </p>
-      <div className="flex justify-between">
-        <div className="h-[80%] w-1/2 mx-7 mt-5 bg-[#FEF9F2] rounded-xl">
+      <div className="flex justify-between h-screen">
+        <div className="h-[90%] w-1/2 mx-7 mt-5 bg-[#FEF9F2] rounded-xl">
           <TripData tripsCompleted={tripsCompleted} ongoingTrips={ongoingTrips} cancelledTrips={cancelledTrips} />
           <IncomeChart netIncome={netIncome} incomeFromOngoingTrips={incomeFromOngoingTrips} avgIncomePerTrip={avgIncomePerTrip} /> 
         </div>

@@ -9,7 +9,7 @@ const TripData = ({ tripsCompleted, ongoingTrips, cancelledTrips }) => {
   const COLORS = ['#4CAF50', '#FF9800', '#F44336']; 
 
   return (
-    <div className="h-[43%] w-full text-center bg-[#FEF9F2]">
+    <div className="h-[43%] w-full text-center ">
       <p className="text-center text-2xl mt-2 pt-4 font-base">Trips Data</p>
       <div className="flex justify-center">
         <PieChart width={400} height={300}>
