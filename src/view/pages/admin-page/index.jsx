@@ -41,19 +41,18 @@ const AdminPage = () => {
     }
   }
 
-
-
   useEffect(() => {
     getAllVehicles();
     getAllBookings();
   }, []);
+
   return (
     <div className="">
       <p className="text-center text-4xl mt-7 font-semibold">
         Admin Dashboard
       </p>
       <div className="flex justify-between">
-        <div className="h-screen w-1/2 ">
+        <div className="h-[80%] w-1/2 mx-7 mt-5 bg-[#FEF9F2] rounded-xl">
           <TripData tripsCompleted={tripsCompleted} ongoingTrips={ongoingTrips} cancelledTrips={cancelledTrips} />
           <IncomeChart netIncome={netIncome} incomeFromOngoingTrips={incomeFromOngoingTrips} avgIncomePerTrip={avgIncomePerTrip} /> 
         </div>

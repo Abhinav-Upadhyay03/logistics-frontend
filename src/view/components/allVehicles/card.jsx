@@ -43,7 +43,7 @@ const VehicleCard = ({ id, vehicleSize, name, distance, pickupLocation, dropOffL
           driverName: name,       
           price,
           distance,
-          status: response.data.bookingStatus || 'On the way to pickup', 
+          status: response.data.bookingStatus || 'Pending', 
           pickupLocation, 
           dropOffLocation,
           driverId,

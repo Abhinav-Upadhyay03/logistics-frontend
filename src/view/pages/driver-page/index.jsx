@@ -4,6 +4,7 @@ import DriverViewModel from '../../view-models/driver-view-model.jsx';
 
 const DriverPage = () => {
   const {
+    user,
     name,
     ongoingJobs,
     availableJobs,

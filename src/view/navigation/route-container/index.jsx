@@ -10,6 +10,7 @@ import DriverPage from '../../pages/driver-page'
 import AllVehicles from '../../pages/all-vehicles-page'
 import UserBooking from '../../pages/user-booking'
 import AdminPage from '../../pages/admin-page'
+import MyBookings from '../../pages/my-bookings'
 
 const router = createBrowserRouter([
     {
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
     {
         path: Routes.Admin,
         element: <AdminPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: Routes.MyBookings,
+        element: <MyBookings />,
         errorElement: <ErrorPage />,
     }
 ])

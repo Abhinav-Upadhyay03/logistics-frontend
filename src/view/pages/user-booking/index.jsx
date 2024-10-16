@@ -44,10 +44,16 @@ const UserBooking = () => {
             <p className="font-medium">Driver Id:</p>
             <p className="text-gray-700">{driverId || "N/A"}</p>
           </div>
-          <div>
+          {
+            driverName && (
+              <div>
             <p className="font-medium">Driver Name:</p>
             <p className="text-gray-700">{driverName || "Unknown"}</p>
           </div>
+            )
+
+          }
+          
           <div>
             <p className="font-medium">Vehicle Type:</p>
             <p className="text-gray-700">{vehicleType || "N/A"}</p>
@@ -57,10 +63,16 @@ const UserBooking = () => {
             <p className="font-medium">Price:</p>
             <p className="text-gray-700">${price?.toFixed(2) || "N/A"}</p>
           </div>
-          <div>
+          {
+            distance && (
+              <div>
             <p className="font-medium">Distance:</p>
             <p className="text-gray-700">{distance?.toFixed(2)} km</p>
           </div>
+            )
+
+          }
+          
           <div>
             <p className="font-medium">Status:</p>
             <p className="text-gray-700">{status || "Pending"}</p>

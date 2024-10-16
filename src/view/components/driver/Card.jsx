@@ -31,7 +31,7 @@ const JobCard = ({ jobID, pickupLocation, dropOffLocation, status, onUpdateStatu
                 value={status}
                 onChange={(e) => onUpdateStatus(e.target.value)}
               >
-                <option value="On the Way">On the Way</option>
+                <option value="On the way to pickup">On the way to pickup</option>
                 <option value="Goods Collected">Goods Collected</option>
                 <option value="Delivered">Delivered</option>
               </select>

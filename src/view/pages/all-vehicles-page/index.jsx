@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import VehiclesViewModel from "../../view-models/vehicles-view-model.jsx";
 import VehicleCard from "../../components/allVehicles/card.jsx";
@@ -7,9 +7,23 @@ const AllVehicles = () => {
   const location = useLocation();
   const { pickup, dropOff, distance } = location.state || {};
   const { vehicles, isLoading, error } = VehiclesViewModel();
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+    }
+  }, []);
+  const userId = user?._id; 
 
   if (isLoading) return <p>Loading vehicles...</p>;
   if (error) return <p>Error fetching vehicles: {error}</p>;
+
+  
+  
+  
 
   return (
     <div className="p-5 w-full h-screen">
@@ -53,7 +67,7 @@ const AllVehicles = () => {
             pickupLocation={pickup}
             dropOffLocation={dropOff}
             driverId={vehicle._id}
-            userId={"670d5efa798258a2e1f3d82c"}
+            userId={userId}
           />
         ))}
       </div>

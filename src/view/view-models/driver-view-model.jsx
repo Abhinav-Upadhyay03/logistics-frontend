@@ -37,7 +37,7 @@ const DriverViewModel = () => {
   // Handle job acceptance
   const handleAcceptJob = (jobID) => {
     const acceptedJob = availableJobs.find((job) => job._id === jobID);
-    setOngoingJobs([...ongoingJobs, { ...acceptedJob, status: 'On the way' }]);
+    setOngoingJobs([...ongoingJobs, { ...acceptedJob, status: 'On the way to pickup' }]);
     setAvailableJobs(availableJobs.filter((job) => job._id !== jobID));
 
     axios.put(`/api/drivers?driverId=${id}`, { available: false })
@@ -46,6 +46,13 @@ const DriverViewModel = () => {
       })
       .catch((error) => {
         console.error('Error updating vehicle availability:', error);
+      });
+      axios.put(`/api/booking?bookingId=${jobID}`, { status: "On the way to pickup" })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error updating job status:', error);
       });
   };
 
@@ -120,6 +127,7 @@ const DriverViewModel = () => {
   }, [id, flag]);
 
   return {
+    user,
     name,
     ongoingJobs,
     availableJobs,
